@@ -12,7 +12,11 @@ function LoginForm() {
             </div>
             <form action="" className='form'>
                 <div className='form-group'>
-                    <label htmlFor="username" className='form-label'>Username<span className='required'>*</span></label>
+                    <label htmlFor="username" 
+                        className='form-label'>
+                            Username
+                            <span className='required'>*</span>
+                    </label>
                     <input type="text" 
                         id="username" 
                         className="form-control" 
@@ -25,7 +29,11 @@ function LoginForm() {
                         aria-live="assertive" 
                         className="validation-message">
                     </span>
-                    <label htmlFor="password" className='form-label'>Password<span className='required'>*</span></label>
+                    <label htmlFor="password"
+                        className='form-label'>
+                            Password
+                            <span className='required'>*</span>
+                    </label>
                     <input type="text" 
                         id="password" 
                         className="form-control" 
@@ -41,9 +49,9 @@ function LoginForm() {
                 </div>
                 <button className='btn-submit'
                     type='submit'>
-                    Sign in
+                    Register
                 </button>
-                <span className='anchor-form'>Don't have an account yet?&nbsp;<a href="#blank">Login here!</a></span>
+                <span className='anchor-form'>Already have an account?&nbsp; <a href="#blank">Login here!</a></span>
             </form>
         </div>
     )
