@@ -12,28 +12,52 @@ class LoginForm extends React.Component {
             },
             submit: ''
         };
-        this.handleChange = this.handleChange.bind(this);
+        this.handleUsername = this.handleUsername.bind(this);
+        this.handlePassword = this.handlePassword.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.md5 = require('md5')
       }
       handleUsername(event) {
         this.setState({
           input: {
-              username: event.target.value
+              username: event.target.value,
+              password: this.state.input.password
           }
         });
       }
       handlePassword(event) {
         this.setState({
           input: {
+              username: this.state.input.username,
               password: event.target.value
           }
         });
       }
       handleSubmit(event) {
         event.preventDefault()
-        this.setState({
-          submit: this.state.input
-        });
+        let hashPassword = this.md5(this.state.input.password)
+        let request = {
+            token: "",
+            data: {
+                username: this.state.input.username,
+                password: hashPassword
+            }
+        }
+        console.log("REQUEST : ", request)
+        fetch(this.props.baseUrl + "/login", {
+            "method": "POST",
+            "headers": {
+                "content-type": "application/json",
+                "accept": "application/json"
+            },
+            "body": JSON.stringify(request)
+        })
+        .then(response => {
+            console.log(response.json())
+        })
+        .catch(err => {
+            console.log(err)
+        })
       }
     render() {
         return (
@@ -43,7 +67,7 @@ class LoginForm extends React.Component {
                     <h2>Hello!</h2>
                     <p>Welcome! Please fill in with your details.</p>
                 </div>
-                <form action="https://super-auto-cash-mobile-api.herokuapp.com" className='form'>
+                <form className='form' onSubmit={this.handleSubmit}>
                     <div className='form-group'>
                         <label htmlFor="username" className='form-label'>Username<span className='required'>*</span></label>
                         <input type="text" 
@@ -53,21 +77,21 @@ class LoginForm extends React.Component {
                             aria-describedby='username-control'
                             placeholder='Enter your username'
                             autoComplete="off"
-                            onChange={handleUsername}
+                            onChange={this.handleUsername}
                             required/>
                         <span id="username-control" 
                             aria-live="assertive" 
                             className="validation-message">
                         </span>
                         <label htmlFor="password" className='form-label'>Password<span className='required'>*</span></label>
-                        <input type="text" 
+                        <input type="password" 
                             id="password" 
                             className="form-control" 
                             minLength={8}
                             aria-describedby='password-control'
                             placeholder='Enter your password'
                             autoComplete="off"
-                            onChange={handleUsername}
+                            onChange={this.handlePassword}
                             required/>
                         <span id="password-control" 
                             aria-live="assertive" 
