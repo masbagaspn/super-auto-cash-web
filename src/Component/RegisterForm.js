@@ -10,7 +10,7 @@ function LoginForm() {
                 <h2>Hello!</h2>
                 <p>Welcome! Please fill in with your details.</p>
             </div>
-            <form action="" className='form'>
+            <form action="https://super-auto-cash-mobile-api.herokuapp.com" className='form'>
                 <div className='form-group'>
                     <label htmlFor="username" 
                         className='form-label'>
