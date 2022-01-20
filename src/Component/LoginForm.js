@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './Form.css';
 import logo from './Asset/logo.png';
+import LogoRequest from '../features/api/request/LoginRequest'
+import LoginRequest from '../features/api/request/LoginRequest';
 
 function LoginForm(props) {
 
@@ -9,20 +11,12 @@ function LoginForm(props) {
     const [detailUser, setDetailUser] = useState({username: "", password: ""});
     const {baseUrl} = props;
     
-    const requestOptions = {
-        method: 'POST',
-        headers: { 
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer my-token',
-            'My-Custom-Header': 'foobar'
-        },
-        body: JSON.stringify({token: "", data: {username: detailUser.username, password: md5(detailUser.password)} })
-    }
+    const request = new LoginRequest("", detailUser.username, md5(detailUser.password));
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        fetch({baseUrl} + '/login', requestOptions)
+        fetch({baseUrl} + '/login', request)
         .then(res => {
             console.log(res.json())
         })
