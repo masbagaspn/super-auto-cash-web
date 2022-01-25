@@ -37,6 +37,7 @@ function MerchantLoginForm()  {
             if (response.success === true) {
                 let token = response.data.token
                 let user = JSON.parse(jwtDecode(token).sub).user
+                user["token"] = token
                 console.log("DECODE USER FROM JWT", user)
                 setUser(user)
                 if (user.roleId === 1) navigate("/user")

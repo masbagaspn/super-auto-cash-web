@@ -1,14 +1,15 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 
 // url initialization
-const baseUrl = {
+export const baseUrl = {
     prod: "https://super-auto-cash-mobile-api.herokuapp.com"
 }
 export const apiUrl = {
     userLogin: `${baseUrl.prod}/user/login`,
     userRegister: `${baseUrl.prod}/user/register`,
     merchantLogin: `${baseUrl.prod}/merchant/login`,
-    menuCreate: `${baseUrl.prod}/menu/create`
+    menuCreate: `${baseUrl.prod}/menu/create`,
+    menuAll: `${baseUrl.prod}/menu/`
 }
 
 // api slice state
@@ -16,6 +17,31 @@ const initialState = {
     loading: false,
     payload: {}
 }
+
+// get method
+export const get = createAsyncThunk(
+    "api/post",
+    async (request) => {
+        let queryParam = ""
+        if (request.queryParam !== undefined && request.queryParam.size > 0) {
+            // query param not empty
+            queryParam = "?"
+            for (const [key, value] of request.queryParam.entries()) {
+                queryParam += key + "=" + value + "&"
+            }
+            queryParam = queryParam.substring(0, queryParam.length - 1) // remove last `&` in queryParam
+        }
+        const response = await fetch(request.endpoint + queryParam, {
+            "method": "GET",
+            "headers": {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Authorization": "Bearer " + request.token
+            },
+        })
+        return response.json()
+    }
+)
 
 // post method
 export const post = createAsyncThunk(
