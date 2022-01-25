@@ -5,8 +5,10 @@ const baseUrl = {
     prod: "https://super-auto-cash-mobile-api.herokuapp.com"
 }
 export const apiUrl = {
-    login: `${baseUrl.prod}/login`,
-    register: `${baseUrl.prod}/register`
+    userLogin: `${baseUrl.prod}/user/login`,
+    userRegister: `${baseUrl.prod}/user/register`,
+    merchantLogin: `${baseUrl.prod}/merchant/login`,
+    menuCreate: `${baseUrl.prod}/menu/create`
 }
 
 // api slice state
@@ -23,10 +25,10 @@ export const post = createAsyncThunk(
             "method": "POST",
             "headers": {
                 "Content-Type": "application/json",
-                "Accept": "application/json"
+                "Accept": "application/json",
+                "Authorization": "Bearer " + request.token
             },
             "body": JSON.stringify({
-                "token": "",
                 "data": request.data
             })
         })

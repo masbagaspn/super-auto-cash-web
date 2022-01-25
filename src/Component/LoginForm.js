@@ -3,9 +3,12 @@ import './Form.css';
 import logo from './Asset/logo.png';
 import { useState } from 'react/cjs/react.development';
 import { useDispatch, useSelector } from 'react-redux';
-import { apiUrl, post, resetPayload, selectLoading, selectPayload } from '../features/api/Api';
+import { apiUrl, post, resetPayload, selectLoading, selectPayload, updateToken } from '../features/api/Api';
+import { Link, useNavigate } from 'react-router-dom';
+import { useLocalStorage } from '../app/useLocalStorage';
 
 function LoginForm()  {
+    const navigate = useNavigate()
     const dispatch = useDispatch()
 
     const loading = useSelector(selectLoading)
@@ -13,6 +16,8 @@ function LoginForm()  {
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
+    
+    const [user, setUser] = useLocalStorage("user", "")
 
     const handleOnChangeUsername = (e) => setUsername(e.target.value)
     const handleOnChangePassword = (e) => setPassword(e.target.value)
@@ -21,12 +26,22 @@ function LoginForm()  {
 
         let hashPassword = require("md5")(password)
         dispatch(post({
-            endpoint: apiUrl.login,
+            endpoint: apiUrl.userLogin,
             data: {
                 username: username,
                 password: hashPassword
             }
-        }))
+        })).then(res => {
+            let response = res.payload
+            if (response.success === true) {
+                let userLoggedIn = response.data
+                setUser(userLoggedIn)
+                if (userLoggedIn.roleId === 1) navigate("/user")
+                else navigate("/merchant")
+            } else {
+                alert(response.errorMessage)
+            }
+        })
     }
 
     let title
@@ -37,14 +52,6 @@ function LoginForm()  {
             <h2>Hello!</h2>
             <p>Welcome! Please fill in with your details.</p>
         </div>
-    }
-
-    if (payload.success === false) {
-        alert(payload.errorMessage)
-        dispatch(resetPayload())
-    } else if (payload.success === true) {
-        alert("Login Success!")
-        dispatch(resetPayload())
     }
 
     return (
@@ -88,7 +95,7 @@ function LoginForm()  {
                     type='submit'>
                     Sign in
                 </button>
-                <span className='anchor-form'>Don't have an account yet?&nbsp;<a href="#blank">Login here!</a></span>
+                <span className='anchor-form'>Don't have an account yet?&nbsp;<Link to="/register">Register Here!</Link></span>
             </form>
         </div>
     )
